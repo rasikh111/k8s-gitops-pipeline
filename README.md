@@ -40,9 +40,9 @@ Set the following secrets in **GitHub → Repo → Settings → Secrets and vari
 
 - `DOCKER_USERNAME` → your Docker Hub username  
 - `DOCKER_PASSWORD` → your Docker Hub password or access token  
-
+---
  
- ##Step 2: Install Argo CD
+ ## Step 2: Install Argo CD
 
 kubectl create namespace argocd
 kubectl apply -n argocd \
@@ -69,7 +69,7 @@ Login:
 
     Password: (value from above)
 ---
-##Step 4: Create Application in Argo CD UI
+## Step 4: Create Application in Argo CD UI
 
     Click + New App in the Argo CD UI.
 
@@ -93,7 +93,7 @@ Login:
 
     Sync the application.
 
-##Step 5: Enable Auto-Sync
+## Step 5: Enable Auto-Sync
 
 In the UI, open your application → App Details → Sync Policy → Enable:
 
@@ -104,7 +104,7 @@ In the UI, open your application → App Details → Sync Policy → Enable:
     ✅ Prune
 
 Now every commit to GitHub will automatically update your Kubernetes cluster.
-##Step 6:  
+## Step 6:  
 🧪 Verification
 
 kubectl get pods -n default
