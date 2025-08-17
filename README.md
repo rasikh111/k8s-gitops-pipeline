@@ -41,40 +41,8 @@ Set the following secrets in **GitHub → Repo → Settings → Secrets and vari
 - `DOCKER_USERNAME` → your Docker Hub username  
 - `DOCKER_PASSWORD` → your Docker Hub password or access token  
 
-### Example Workflow (`.github/workflows/ci-cd.yaml`)
-```yaml
-name: CI/CD Pipeline
-
-on:
-  push:
-    branches: [ "main" ]
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-
-    - name: Log in to Docker Hub
-      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-
-    - name: Build Docker image
-      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/k8s-gitops-pipeline:latest .
-
-    - name: Push Docker image
-      run: docker push ${{ secrets.DOCKER_USERNAME }}/k8s-gitops-pipeline:latest
-
-    - name: Update Deployment manifest
-      run: |
-        sed -i "s|image: .*|image: ${{ secrets.DOCKER_USERNAME }}/k8s-gitops-pipeline:latest|" manifest/deployment.yaml
-        git config user.name "github-actions"
-        git config user.email "actions@github.com"
-        git add manifest/deployment.yaml
-        git commit -m "Update image tag [skip ci]" || echo "No changes to commit"
-        git push
-
-☸️ Step 2: Install Argo CD
+ 
+ ##Step 2: Install Argo CD
 
 kubectl create namespace argocd
 kubectl apply -n argocd \
@@ -100,8 +68,8 @@ Login:
     Username: admin
 
     Password: (value from above)
-
-Step 4: Create Application in Argo CD UI
+---
+##Step 4: Create Application in Argo CD UI
 
     Click + New App in the Argo CD UI.
 
@@ -125,7 +93,7 @@ Step 4: Create Application in Argo CD UI
 
     Sync the application.
 
-Step 5: Enable Auto-Sync
+##Step 5: Enable Auto-Sync
 
 In the UI, open your application → App Details → Sync Policy → Enable:
 
@@ -136,17 +104,7 @@ In the UI, open your application → App Details → Sync Policy → Enable:
     ✅ Prune
 
 Now every commit to GitHub will automatically update your Kubernetes cluster.
-Step 6: Environment Variables
-1. CI/CD Variables (GitHub Actions)
-
-Defined in .github/workflows/ci-cd.yaml and stored in GitHub Secrets:
-
-env:
-  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-
-These are only used during the build/push pipeline.
- 
+##Step 6:  
 🧪 Verification
 
 kubectl get pods -n default
